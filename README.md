@@ -1,3 +1,8 @@
+<a href="http://tarantool.org">
+   <img src="https://avatars2.githubusercontent.com/u/2344919?v=2&s=250"
+align="right">
+</a>
+
 ## Overview
 
 `package.reload` is a Lua package for hot-reloading Tarantool packages. It may come in handy if you have a large in-memory dataset and need to often deploy code changes.

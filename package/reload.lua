@@ -29,16 +29,23 @@ if not package.reload then
 	
 	local fio = require('fio');
 	local src = debug.getinfo(3, "S").source:sub(2);
-	local lnk = fio.readlink(src);
-	if lnk then src = lnk end;
+	
+	-- Keep original file path, even if it was a symlink
+	--local lnk = fio.readlink(src);
+	--if lnk then src = lnk end;
 
-	if lnk then src = lnk end;	M = setmetatable({
+	M = setmetatable({
 		O      = {};
 		F      = {};
 		C      = {};
 		loaded = {};
 		count  = 1;
 		script = src;
+
+		-- spin   = 1; -- id of currently starting generation
+		-- turn   = 0; -- id of successfully loaded generation
+		-- roll step ring
+
 	},{
 		__tostring = function () return 'package.reload{}' end;
 		__call = function(m,...)
@@ -57,11 +64,22 @@ else
 	M:_reload()
 end
 
+function M:wait_start()
+	if self._wait_start == nil then
+		self._wait_start = fiber.channel(1)
+	elseif self._wait_start then
+		---
+	else
+		return
+	end
+	return self._wait_start:get()
+end
+
 function M:_reload()
 	M.count = M.count + 1
 	local unload = {}
 	for m in pairs(package.loaded) do
-		if not M.loaded[m] then			
+		if not M.loaded[m] then
 			table.insert(unload,m)
 			package.loaded[m] = nil
 		end
@@ -128,9 +146,22 @@ function M:register(...)
 		end
 	end
 end
+local yaml = require 'yaml'
 fiber.create(function()
-	fiber.sleep(0)
+	local x = 0
+	repeat
+		log.error("Cleanup wait...")
+		fiber.sleep(x/1e5)
+		x = x + 1
+	until type(box.cfg) ~= 'function' and box.info.status == 'running'
+	require('log').error("Cleanup %s, %s", x, box.info.status)
 	package.loaded[N] = nil
+	if M._wait_start then
+		while M._wait_start:has_readers() do
+			M._wait_start:put(true)
+		end
+		M._wait_start = false
+	end
 	return
 end)
 return M

@@ -20,7 +20,7 @@ When first loaded, `package.reload` lists all the currently loaded packages **wi
 
 On subsequent calls, `package.reload` reloads all the packages that have been loaded since the previous call to `package.reload`. Suppose you have loaded three packages: `avro_schema`, `expirationd`, and `memcached`. Then after calling `package.reload` you should see a similar output:
 
-    tarantool> package.reload
+    tarantool> package.reload()
     2nd load. Unloading {memcached, expirationd, avro_schema.compiler, avro_schema.runtime, avro_schema.il, avro_schema, avro_schema.backend, avro_schema.frontend}
     reload:cleanup...
     reload:cleanup finished

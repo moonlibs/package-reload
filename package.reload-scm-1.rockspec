@@ -1,12 +1,12 @@
 package = 'package.reload'
 version = 'scm-1'
 source  = {
-    url    = 'git://github.com/Mons/tnt-package-reload.git',
+    url    = 'git://github.com/moonlibs/package-reload.git',
     branch = 'master',
 }
 description = {
     summary  = "Module for unloading previously loaded modules",
-    homepage = 'https://github.com/Mons/tnt-package-reload.git',
+    homepage = 'https://github.com/moonlibs/package-reload.git',
     license  = 'BSD',
 }
 dependencies = {

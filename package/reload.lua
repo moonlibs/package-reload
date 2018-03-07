@@ -150,7 +150,7 @@ local yaml = require 'yaml'
 fiber.create(function()
 	local x = 0
 	repeat
-		log.error("Cleanup wait...")
+		-- log.error("Cleanup wait...")
 		fiber.sleep(x/1e5)
 		x = x + 1
 	until type(box.cfg) ~= 'function' and box.info.status == 'running'

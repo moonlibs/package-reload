@@ -41,6 +41,7 @@ if not package.reload then
 		loaded = {};
 		count  = 1;
 		script = src;
+		started = os.date("%Y-%m-%dT%H:%M:%S");
 
 		-- spin   = 1; -- id of currently starting generation
 		-- turn   = 0; -- id of successfully loaded generation
@@ -85,6 +86,7 @@ function M:_reload()
 		end
 	end
 	log.info("%s load. Unloading {%s}",numstr(M.count),table.concat(unload, ", "))
+	M.reloaded = os.date("%Y-%m-%dT%H:%M:%S");
 	M:cleanup()
 end
 

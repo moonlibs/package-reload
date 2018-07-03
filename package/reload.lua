@@ -50,6 +50,7 @@ if not package.reload then
 	},{
 		__tostring = function () return 'package.reload{}' end;
 		__call = function(m,...)
+			if type(box.cfg) ~= 'function' then box.session.su('admin') end
 			dofile(M.script)
 		end;
 	})

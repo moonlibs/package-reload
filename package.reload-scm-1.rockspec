@@ -1,7 +1,7 @@
 package = 'package.reload'
 version = 'scm-1'
 source  = {
-    url    = 'git://github.com/moonlibs/package-reload.git',
+    url    = 'git+https://github.com/moonlibs/package-reload.git',
     branch = 'master',
 }
 description = {

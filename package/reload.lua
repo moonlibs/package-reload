@@ -78,6 +78,24 @@ function M:wait_start()
 end
 
 function M:_reload()
+	for name, m in pairs(package.loaded) do
+		-- M.loaded table contains reloadless packages, we'll skip it
+		if not M.loaded[name] and type(m) == 'table' then
+			-- Some packages use __index meta method, we'll go around it with rawget
+			local cb = rawget(m, 'on_before_reload')
+			if type(cb) == 'function' then
+				log.info('Gen %s, perform %s.on_before_reload callback', M.count, name)
+				local ok, err = pcall(cb)
+				if not ok then
+					local err_msg = string.format(
+					'Stop reload %s => %s because %s.on_before_reload failed: %s', numstr(M.count), numstr(M.count+1), name, err)
+					log.error(err_msg)
+					error(err_msg)
+				end
+			end
+		end
+	end
+
 	M.count = M.count + 1
 	local unload = {}
 	for m in pairs(package.loaded) do
